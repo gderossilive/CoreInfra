@@ -56,6 +56,8 @@ $Command="sudo apt-get update && sudo apt-get install -y squid apache2-utils && 
 # ---------------- Compile the Bicep files to ARM Template ---------
 
 az bicep build --file CoreMain.bicep --outfile .\ARM\azuredeploy.json
+$url="https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/azuredeploy.json"
+[uri]::EscapeDataString($url)
 
 # ---------------- Test the ARM template ---------------------------
 
@@ -70,7 +72,7 @@ $SpokesNumber=2
 az deployment sub create `
      --name "StampDeploy-$Seed" `
      --location $location `
-     --template-file '.\ARM\azuredeploy.json' `
+     --template-uri $url `
      --parameters `
           Parameters.json `
           Seed=$Seed `
