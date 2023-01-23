@@ -18,4 +18,4 @@ L'ambiente realizzato tramite questo script è articolato in 2 parti principali:
 
 Prova a farne il deploy sulla tua sottoscrizione
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgderossilive%2FCoreInfra%F2CoreMain%2Fmaster%2FARM%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgderossilive%2FCoreInfra%2Fmaster%2FARM%2Fazuredeploy.json)
