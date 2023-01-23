@@ -1,0 +1,107 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "Location": {
+        "value": "eastus"
+      },
+      "HubRgPostfix": {
+        "value": "Hub"
+
+      },
+      "HubVnetPrefix": {
+        "value": "Hub-VNet"
+        
+      },
+      "InSubnetPrefix": {
+        "value": "dns-inbound"
+        
+      },
+      "OutSubnetPrefix": {
+        "value": "dns-outbound"
+        
+      },
+      "PEsubnetName": {
+        "value": "PE-subnet"
+        
+      },
+      "HubVnetAddressPrefix": {
+        "value": "10.10.0.0/16"
+        
+      },
+      "CustomDNSserver": {
+        "value": "10.10.100.4"
+        
+      },
+      "DNSInboundSubnetAddressPrefix": {
+        "value": "10.10.100.0/28"
+        
+      },
+      "DNSOutboundSubnetAddressPrefix": {
+        "value": "10.10.100.16/28"
+        
+      },
+      "BastionSubnetAddressPrefix": {
+        "value": "10.10.0.64/26"
+        
+      },
+      "PEsubnetAddressPrefix": {
+        "value": "10.10.1.0/24"
+        
+      },
+      "FirewallSubnetAddressPrefix": {
+        "value": "10.10.2.0/24"
+      },
+      "GatewaySubnetAddressPrefix": {
+        "value": "10.10.3.0/24"
+      },
+      "SpokeRgPostfix": {
+        "value": "Spokes"
+      },
+      "DeployNSG": {
+        "value": false
+      },
+      "DeployBS": {
+        "value": false
+      },
+      "DeployRT": {
+        "value": false
+      },
+      "DeployKV": {
+        "value": false
+      },
+      "DeployDNS": {
+        "value": false
+      },
+      "SpokesNumber": {
+        "value": 0
+      },
+      "DeployProxy": {
+        "value": false
+      },
+      "DeployOnPrem": {
+        "value": false
+      },
+      "OnPremRgPostfix": {
+        "value": "OnPrem"
+      },
+      "OnPremVnetPrefix": {
+        "value": "OnPrem-VLan"
+      },
+      "OnPremVnetAddressPrefix": {
+        "value": "192.168.0.0/16"
+      },
+      "OnPremGWvnetSubnetAddressPrefix": {
+        "value": "192.168.0.0/26"
+      },
+      "OnPremPEvnetSubnetAddressPrefix": {
+        "value": "192.168.1.0/24"
+      },
+      "OnPremDMZvnetSubnetAddressPrefix": {
+        "value": "192.168.2.0/24"
+      },
+      "adminPassword": {
+        "value": ""
+      }
+    }
+}
