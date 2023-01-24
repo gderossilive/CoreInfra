@@ -21,6 +21,9 @@
     "adminPassword": {
       "type": "secureString"
     },
+    "MyObjectId": {
+      "type": "string"
+    },
     "HubRgPostfix": {
       "type": "string",
       "defaultValue": "Hub"
@@ -75,15 +78,15 @@
     },
     "DeployNSG": {
       "type": "bool",
-      "defaultValue": false
+      "defaultValue": true
     },
     "DeployRT": {
       "type": "bool",
-      "defaultValue": false
+      "defaultValue": true
     },
     "DeployBS": {
       "type": "bool",
-      "defaultValue": false
+      "defaultValue": true
     },
     "DeployDNS": {
       "type": "bool",
@@ -99,11 +102,11 @@
     },
     "SpokesNumber": {
       "type": "int",
-      "defaultValue": 0
+      "defaultValue": 1
     },
     "DeployOnPrem": {
       "type": "bool",
-      "defaultValue": false
+      "defaultValue": true
     },
     "DeployProxy": {
       "type": "bool",
@@ -112,9 +115,6 @@
     "OnPremRgPostfix": {
       "type": "string",
       "defaultValue": "OnPrem"
-    },
-    "MyObjectId": {
-      "type": "string"
     },
     "OnPremVnetPrefix": {
       "type": "string",
