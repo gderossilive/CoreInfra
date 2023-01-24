@@ -16,7 +16,8 @@
       "type": "string"
     },
     "Location": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "eastus"
     },
     "adminPassword": {
       "type": "secureString"
