@@ -10,7 +10,6 @@ Avere a disposizione velocemente questi ambienti, permette di potersi concentrar
 - Etc.
 
 # Deployment
-E' possibile eseguire il deployment di ogni scenario utilizzando il relativo Azure Button
 
 | Scenario | Descrizione | ARM Template |
 |:-------------------------|:-------------|:-------------|
