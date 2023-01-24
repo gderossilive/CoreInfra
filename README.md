@@ -18,14 +18,4 @@ Di seguito i template per il deployment degli scenari principali
 | Hub & Spoke ibrido | Hub & Spoke + VLAN collegata via vpn, con traffico internet routato attraverso il firewall |[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgderossilive%2FCoreInfra%2Fmaster%2FARM%2FHybrid.json)
 
 # Architettura
-L'ambiente realizzato tramite questo script è articolato in 2 parti principali:
-
-- Una parte che rappresenta una tipica architettura Hub&Spoke
-- Una parte che può essere utilizzata per rappresentare una VLan OnPrem collegata con l'Hub
-
-## Architettura Hub&Spoke
-
-
-Prova a farne il deploy sulla tua sottoscrizione
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgderossilive%2FCoreInfra%2Fmaster%2FARM%2FSingolaVNet.json)
+[...]
