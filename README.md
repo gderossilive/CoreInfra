@@ -17,30 +17,46 @@ Avere a disposizione velocemente questi ambienti, permette di potersi concentrar
 | Hub & Spoke | Hub & Spoke con traffico internet routato attraverso il firewall |[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgderossilive%2FCoreInfra%2Fmaster%2FARM%2FHubAndSpoke.json)
 | Hub & Spoke ibrido | Hub & Spoke + VLAN collegata via vpn, con traffico internet routato attraverso il firewall |[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgderossilive%2FCoreInfra%2Fmaster%2FARM%2FHybrid.json)
 
-E' possibile fare il deployment dei 3 scenari anche utilizzando Azure CLI
-
-```azurecli
+E' possibile fare il deployment dei 3 scenari anche utilizzando Azure CLI. Prima di lanciare uno qualsiasi dei tre scenari, è consigliabile instanziare le 4 variabili sotto 
+```
 $Seed=(-join ((48..57) + (97..122) | Get-Random -Count 3 | % {[char]$_}))
 $MyIP=<Inserisci il tuo IP>
 $location='eastus'
 $adminPassword=(-join ((48..59) + (63..91) + (99..123) | Get-Random -count 15 | % {[char]$_})) 
 $MyObecjectId=<Inserisci l'objectId del tuo utente> 
 $SpokesNumber=0
-
+```
+Dopodichè lanciare il comando Azure CLI corrispondente allo scenario che si vuole realizzare
+```
+# Scenario Singola VNet 
 az deployment sub create `
   --name "SingolaVNet-$Seed" `
   --location eastus `
   --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/SingolaVNet.json"  `
   --parameters `
         Seed=$Seed `
-        DeployNSG=False `
-        DeployBS=False `
-        DeployRT=True `
-        DeployKV=False `
-        DeployDNS=False `
-        DeployOnPrem=False `
-        DeployProxy=False `
-        SpokesNumber=0 `
+        MyObjectId=$MyObecjectId `
+        MyIP=$MyIP `
+        adminPassword=$adminPassword
+
+# Scenario Hub&Spoke
+az deployment sub create `
+  --name "HubAndSpoke-$Seed" `
+  --location eastus `
+  --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/HubAndSpoke.json"  `
+  --parameters `
+        Seed=$Seed `
+        MyObjectId=$MyObecjectId `
+        MyIP=$MyIP `
+        adminPassword=$adminPassword
+
+# Scenario hybrid 
+az deployment sub create `
+  --name "Hybrid-$Seed" `
+  --location eastus `
+  --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/Hybrid.json"  `
+  --parameters `
+        Seed=$Seed `
         MyObjectId=$MyObecjectId `
         MyIP=$MyIP `
         adminPassword=$adminPassword
