@@ -20,7 +20,6 @@ Avere a disposizione velocemente questi ambienti, permette di potersi concentrar
 E' possibile fare il deployment dei 3 scenari anche utilizzando Azure CLI
 
 ```azurecli
-
 $Seed=(-join ((48..57) + (97..122) | Get-Random -Count 3 | % {[char]$_}))
 $MyIP=<Inserisci il tuo IP>
 $location='eastus'
