@@ -10,6 +10,7 @@ Avere a disposizione velocemente questi ambienti, permette di potersi concentrar
 - Etc.
 
 # Deployment
+## Azure Button
 
 | Scenario | Descrizione | ARM Template |
 |:-------------------------|:-------------|:-------------|
@@ -17,6 +18,7 @@ Avere a disposizione velocemente questi ambienti, permette di potersi concentrar
 | Hub & Spoke | Hub & Spoke con traffico internet routato attraverso il firewall |[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgderossilive%2FCoreInfra%2Fmaster%2FARM%2FHubAndSpoke.json)
 | Hub & Spoke ibrido | Hub & Spoke + VLAN collegata via vpn, con traffico internet routato attraverso il firewall |[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgderossilive%2FCoreInfra%2Fmaster%2FARM%2FHybrid.json)
 
+## Azure CLI
 E' possibile fare il deployment dei 3 scenari anche utilizzando Azure CLI. Prima di lanciare uno qualsiasi dei tre scenari, è consigliabile instanziare le 4 variabili sotto 
 ```
 $Seed=(-join ((48..57) + (97..122) | Get-Random -Count 3 | % {[char]$_}))
