@@ -91,11 +91,11 @@
     },
     "DeployDNS": {
       "type": "bool",
-      "defaultValue": false
+      "defaultValue": true
     },
     "DeployKV": {
       "type": "bool",
-      "defaultValue": false
+      "defaultValue": true
     },
     "SpokeRgPostfix": {
       "type": "string",
