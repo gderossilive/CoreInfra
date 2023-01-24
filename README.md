@@ -32,7 +32,7 @@ Dopodichè lanciare il comando Azure CLI corrispondente allo scenario che si vuo
 ```
 # Scenario Singola VNet 
 az deployment sub create `
-  --name "SingolaVNet-$Seed" `
+  --name "CoreMain-$Seed" `
   --location eastus `
   --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/SingolaVNet.json"  `
   --parameters `
@@ -43,7 +43,7 @@ az deployment sub create `
 
 # Scenario Hub&Spoke
 az deployment sub create `
-  --name "HubAndSpoke-$Seed" `
+  --name "CoreMain-$Seed" `
   --location eastus `
   --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/HubAndSpoke.json"  `
   --parameters `
@@ -54,7 +54,7 @@ az deployment sub create `
 
 # Scenario hybrid 
 az deployment sub create `
-  --name "Hybrid-$Seed" `
+  --name "CoreMain-$Seed" `
   --location eastus `
   --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/Hybrid.json"  `
   --parameters `
