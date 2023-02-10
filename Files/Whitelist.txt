@@ -1,0 +1,13 @@
+.bing.com
+.windows.net
+.live.com
+.msftconnecttest.com
+.azure.com
+.microsoftonline.com
+.office.com
+aka.ms
+.microsoft.com
+.ubuntu.com
+.visualstudio.com
+.windowsupdate.com
+.agentsvc.azure-automation.net
