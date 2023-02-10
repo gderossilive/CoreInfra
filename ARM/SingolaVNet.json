@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.13.1.58284",
-      "templateHash": "15620696116255940924"
+      "templateHash": "76680105260748620"
     }
   },
   "parameters": {
@@ -252,7 +252,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.13.1.58284",
-              "templateHash": "10307021990705553327"
+              "templateHash": "8035997970210935366"
             }
           },
           "parameters": {
@@ -346,7 +346,7 @@
           },
           "resources": [
             {
-              "condition": "[or(parameters('DeployNSG'), parameters('DeployRT'))]",
+              "condition": "[parameters('DeployNSG')]",
               "type": "Microsoft.Network/networkSecurityGroups",
               "apiVersion": "2021-02-01",
               "name": "[parameters('NSGname')]",
@@ -1878,7 +1878,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.13.1.58284",
-              "templateHash": "10119576111024892731"
+              "templateHash": "6488243903095888314"
             }
           },
           "parameters": {
@@ -2423,7 +2423,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.13.1.58284",
-                      "templateHash": "6733502003575934017"
+                      "templateHash": "16924972989045002403"
                     }
                   },
                   "parameters": {
@@ -2442,18 +2442,30 @@
                     }
                   },
                   "variables": {
-                    "subnetName": "GatewaySubnet"
+                    "subnetName": "GatewaySubnet",
+                    "RgName": "[resourceGroup().name]",
+                    "SubscriptionId": "[subscription().id]",
+                    "resourceId": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Network/virtualNetworkGateways/{2}/ipConfigurations/default', variables('SubscriptionId'), variables('RgName'), parameters('VirtualNetGwName'))]"
                   },
                   "resources": [
                     {
                       "type": "Microsoft.Network/publicIPAddresses",
-                      "apiVersion": "2022-01-01",
+                      "apiVersion": "2022-07-01",
                       "name": "[parameters('GW_pip_name')]",
-                      "location": "[parameters('location')]"
+                      "location": "[parameters('location')]",
+                      "sku": {
+                        "name": "Standard",
+                        "tier": "Regional"
+                      },
+                      "properties": {
+                        "publicIPAllocationMethod": "Static",
+                        "idleTimeoutInMinutes": 4,
+                        "publicIPAddressVersion": "IPv4"
+                      }
                     },
                     {
                       "type": "Microsoft.Network/virtualNetworkGateways",
-                      "apiVersion": "2022-01-01",
+                      "apiVersion": "2022-07-01",
                       "name": "[parameters('VirtualNetGwName')]",
                       "location": "[parameters('location')]",
                       "properties": {
@@ -2472,15 +2484,21 @@
                             }
                           }
                         ],
+                        "natRules": [],
+                        "virtualNetworkGatewayPolicyGroups": [],
+                        "enableBgpRouteTranslationForNat": false,
+                        "disableIPSecReplayProtection": false,
                         "sku": {
                           "name": "VpnGw1",
                           "tier": "VpnGw1"
                         },
                         "gatewayType": "Vpn",
                         "vpnType": "RouteBased",
-                        "enableBgp": true,
+                        "enableBgp": false,
                         "activeActive": false,
-                        "vpnGatewayGeneration": "Generation1"
+                        "vpnGatewayGeneration": "Generation1",
+                        "allowRemoteVnetTraffic": false,
+                        "allowVirtualWanTraffic": false
                       },
                       "dependsOn": [
                         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('GW_pip_name'))]"
@@ -2528,7 +2546,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.13.1.58284",
-                      "templateHash": "6733502003575934017"
+                      "templateHash": "16924972989045002403"
                     }
                   },
                   "parameters": {
@@ -2547,18 +2565,30 @@
                     }
                   },
                   "variables": {
-                    "subnetName": "GatewaySubnet"
+                    "subnetName": "GatewaySubnet",
+                    "RgName": "[resourceGroup().name]",
+                    "SubscriptionId": "[subscription().id]",
+                    "resourceId": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Network/virtualNetworkGateways/{2}/ipConfigurations/default', variables('SubscriptionId'), variables('RgName'), parameters('VirtualNetGwName'))]"
                   },
                   "resources": [
                     {
                       "type": "Microsoft.Network/publicIPAddresses",
-                      "apiVersion": "2022-01-01",
+                      "apiVersion": "2022-07-01",
                       "name": "[parameters('GW_pip_name')]",
-                      "location": "[parameters('location')]"
+                      "location": "[parameters('location')]",
+                      "sku": {
+                        "name": "Standard",
+                        "tier": "Regional"
+                      },
+                      "properties": {
+                        "publicIPAllocationMethod": "Static",
+                        "idleTimeoutInMinutes": 4,
+                        "publicIPAddressVersion": "IPv4"
+                      }
                     },
                     {
                       "type": "Microsoft.Network/virtualNetworkGateways",
-                      "apiVersion": "2022-01-01",
+                      "apiVersion": "2022-07-01",
                       "name": "[parameters('VirtualNetGwName')]",
                       "location": "[parameters('location')]",
                       "properties": {
@@ -2577,15 +2607,21 @@
                             }
                           }
                         ],
+                        "natRules": [],
+                        "virtualNetworkGatewayPolicyGroups": [],
+                        "enableBgpRouteTranslationForNat": false,
+                        "disableIPSecReplayProtection": false,
                         "sku": {
                           "name": "VpnGw1",
                           "tier": "VpnGw1"
                         },
                         "gatewayType": "Vpn",
                         "vpnType": "RouteBased",
-                        "enableBgp": true,
+                        "enableBgp": false,
                         "activeActive": false,
-                        "vpnGatewayGeneration": "Generation1"
+                        "vpnGatewayGeneration": "Generation1",
+                        "allowRemoteVnetTraffic": false,
+                        "allowVirtualWanTraffic": false
                       },
                       "dependsOn": [
                         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('GW_pip_name'))]"
@@ -2632,7 +2668,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.13.1.58284",
-                      "templateHash": "16971032923316367590"
+                      "templateHash": "16932854694310849315"
                     }
                   },
                   "parameters": {
@@ -2652,28 +2688,30 @@
                   "resources": [
                     {
                       "type": "Microsoft.Network/connections",
-                      "apiVersion": "2022-01-01",
+                      "apiVersion": "2022-07-01",
                       "name": "[parameters('connection_name')]",
                       "location": "[parameters('location')]",
                       "properties": {
-                        "sharedKey": "Azure.123",
+                        "virtualNetworkGateway1": {
+                          "id": "[parameters('RemoteGWId')]"
+                        },
+                        "virtualNetworkGateway2": {
+                          "id": "[parameters('LocalGWId')]"
+                        },
                         "connectionType": "Vnet2Vnet",
                         "connectionProtocol": "IKEv2",
                         "routingWeight": 0,
+                        "sharedKey": "Azure.123!",
                         "enableBgp": false,
                         "useLocalAzureIpAddress": false,
                         "usePolicyBasedTrafficSelectors": false,
                         "ipsecPolicies": [],
                         "trafficSelectorPolicies": [],
                         "expressRouteGatewayBypass": false,
+                        "enablePrivateLinkFastPath": false,
                         "dpdTimeoutSeconds": 0,
                         "connectionMode": "Default",
-                        "virtualNetworkGateway1": {
-                          "id": "[parameters('RemoteGWId')]"
-                        },
-                        "virtualNetworkGateway2": {
-                          "id": "[parameters('LocalGWId')]"
-                        }
+                        "gatewayCustomBgpIpAddresses": []
                       }
                     }
                   ]
@@ -2715,7 +2753,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.13.1.58284",
-                      "templateHash": "16971032923316367590"
+                      "templateHash": "16932854694310849315"
                     }
                   },
                   "parameters": {
@@ -2735,28 +2773,30 @@
                   "resources": [
                     {
                       "type": "Microsoft.Network/connections",
-                      "apiVersion": "2022-01-01",
+                      "apiVersion": "2022-07-01",
                       "name": "[parameters('connection_name')]",
                       "location": "[parameters('location')]",
                       "properties": {
-                        "sharedKey": "Azure.123",
+                        "virtualNetworkGateway1": {
+                          "id": "[parameters('RemoteGWId')]"
+                        },
+                        "virtualNetworkGateway2": {
+                          "id": "[parameters('LocalGWId')]"
+                        },
                         "connectionType": "Vnet2Vnet",
                         "connectionProtocol": "IKEv2",
                         "routingWeight": 0,
+                        "sharedKey": "Azure.123!",
                         "enableBgp": false,
                         "useLocalAzureIpAddress": false,
                         "usePolicyBasedTrafficSelectors": false,
                         "ipsecPolicies": [],
                         "trafficSelectorPolicies": [],
                         "expressRouteGatewayBypass": false,
+                        "enablePrivateLinkFastPath": false,
                         "dpdTimeoutSeconds": 0,
                         "connectionMode": "Default",
-                        "virtualNetworkGateway1": {
-                          "id": "[parameters('RemoteGWId')]"
-                        },
-                        "virtualNetworkGateway2": {
-                          "id": "[parameters('LocalGWId')]"
-                        }
+                        "gatewayCustomBgpIpAddresses": []
                       }
                     }
                   ]
@@ -2766,6 +2806,268 @@
                 "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('HubRGname')), 'Microsoft.Resources/deployments', variables('HubVirtualNetworkGWName'))]",
                 "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('OnPremRGname'))]",
                 "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('OnPremRGname')), 'Microsoft.Resources/deployments', variables('OnPremVirtualNetworkGWName'))]"
+              ]
+            },
+            {
+              "condition": "[parameters('DeployProxy')]",
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "[variables('Proxyname')]",
+              "resourceGroup": "[parameters('OnPremRGname')]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "vmName": {
+                    "value": "[variables('Proxyname')]"
+                  },
+                  "virtualNetworkName": {
+                    "value": "[parameters('OnPremVnetName')]"
+                  },
+                  "subnetName": {
+                    "value": "[variables('DMZsubnetName')]"
+                  },
+                  "adminPassword": {
+                    "value": "[parameters('adminPassword')]"
+                  },
+                  "location": {
+                    "value": "[reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('OnPremRGname')), '2021-01-01', 'full').location]"
+                  },
+                  "CustomDnsServer": {
+                    "value": "168.63.129.16"
+                  },
+                  "Command": {
+                    "value": "sh && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://gdrcontent.z16.web.core.windows.net/whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://gdrcontent.z16.web.core.windows.net/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.13.1.58284",
+                      "templateHash": "4015490988760651506"
+                    }
+                  },
+                  "parameters": {
+                    "adminUsername": {
+                      "type": "string",
+                      "defaultValue": "gdradmin",
+                      "metadata": {
+                        "description": "Username for the Virtual Machine."
+                      }
+                    },
+                    "adminPassword": {
+                      "type": "secureString",
+                      "minLength": 12,
+                      "metadata": {
+                        "description": "Password for the Virtual Machine."
+                      }
+                    },
+                    "dnsLabelPrefix": {
+                      "type": "string",
+                      "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id, parameters('vmName'))))]",
+                      "metadata": {
+                        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+                      }
+                    },
+                    "publicIPAllocationMethod": {
+                      "type": "string",
+                      "defaultValue": "Dynamic",
+                      "allowedValues": [
+                        "Dynamic",
+                        "Static"
+                      ],
+                      "metadata": {
+                        "description": "Allocation method for the Public IP used to access the Virtual Machine."
+                      }
+                    },
+                    "publicIpSku": {
+                      "type": "string",
+                      "defaultValue": "Basic",
+                      "allowedValues": [
+                        "Basic",
+                        "Standard"
+                      ],
+                      "metadata": {
+                        "description": "SKU for the Public IP used to access the Virtual Machine."
+                      }
+                    },
+                    "vmSize": {
+                      "type": "string",
+                      "defaultValue": "Standard_B2ms",
+                      "metadata": {
+                        "description": "Size of the virtual machine."
+                      }
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]",
+                      "metadata": {
+                        "description": "Location for all resources."
+                      }
+                    },
+                    "vmName": {
+                      "type": "string",
+                      "defaultValue": "simple-vm",
+                      "metadata": {
+                        "description": "Name of the virtual machine."
+                      }
+                    },
+                    "virtualNetworkName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "(Existing) Virtual Network and subent where to join the VM"
+                      }
+                    },
+                    "subnetName": {
+                      "type": "string"
+                    },
+                    "Command": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "CustomDnsServer": {
+                      "type": "string",
+                      "defaultValue": ""
+                    }
+                  },
+                  "variables": {
+                    "seed": "[substring(uniqueString(parameters('vmName'), parameters('virtualNetworkName'), parameters('subnetName')), 0, 5)]",
+                    "nicName": "[format('{0}-Nic-{1}', parameters('vmName'), variables('seed'))]",
+                    "publicIpName": "[format('{0}-PIP-{1}', parameters('vmName'), variables('seed'))]"
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Network/networkInterfaces",
+                      "apiVersion": "2021-02-01",
+                      "name": "[variables('nicName')]",
+                      "location": "[parameters('location')]",
+                      "properties": {
+                        "ipConfigurations": [
+                          {
+                            "name": "ipconfig1",
+                            "properties": {
+                              "privateIPAllocationMethod": "Dynamic",
+                              "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                              }
+                            }
+                          }
+                        ],
+                        "dnsSettings": {
+                          "dnsServers": "[if(equals(parameters('CustomDnsServer'), ''), createArray(), createArray(parameters('CustomDnsServer')))]"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Compute/virtualMachines",
+                      "apiVersion": "2021-03-01",
+                      "name": "[parameters('vmName')]",
+                      "location": "[parameters('location')]",
+                      "properties": {
+                        "hardwareProfile": {
+                          "vmSize": "[parameters('vmSize')]"
+                        },
+                        "osProfile": {
+                          "computerName": "[parameters('vmName')]",
+                          "adminUsername": "[parameters('adminUsername')]",
+                          "adminPassword": "[parameters('adminPassword')]"
+                        },
+                        "storageProfile": {
+                          "imageReference": {
+                            "publisher": "Canonical",
+                            "offer": "UbuntuServer",
+                            "sku": "18.04-LTS",
+                            "version": "latest"
+                          },
+                          "osDisk": {
+                            "createOption": "FromImage",
+                            "managedDisk": {
+                              "storageAccountType": "StandardSSD_LRS"
+                            }
+                          }
+                        },
+                        "networkProfile": {
+                          "networkInterfaces": [
+                            {
+                              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+                            }
+                          ]
+                        },
+                        "diagnosticsProfile": {
+                          "bootDiagnostics": {
+                            "enabled": false
+                          }
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+                      ]
+                    },
+                    {
+                      "condition": "[not(equals(parameters('Command'), ''))]",
+                      "type": "Microsoft.Compute/virtualMachines/extensions",
+                      "apiVersion": "2022-08-01",
+                      "name": "[format('{0}/{1}', parameters('vmName'), 'CustomScriptExtension')]",
+                      "location": "[parameters('location')]",
+                      "properties": {
+                        "publisher": "Microsoft.Azure.Extensions",
+                        "type": "CustomScript",
+                        "typeHandlerVersion": "2.1",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                          "skipDos2Unix": false,
+                          "timestamp": 123456789
+                        },
+                        "protectedSettings": {
+                          "commandToExecute": "[parameters('Command')]"
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.DevTestLab/schedules",
+                      "apiVersion": "2018-09-15",
+                      "name": "[format('shutdown-computevm-{0}', parameters('vmName'))]",
+                      "location": "[parameters('location')]",
+                      "properties": {
+                        "status": "Enabled",
+                        "taskType": "ComputeVmShutdownTask",
+                        "dailyRecurrence": {
+                          "time": "1900"
+                        },
+                        "timeZoneId": "W. Europe Standard Time",
+                        "notificationSettings": {
+                          "status": "Disabled",
+                          "timeInMinutes": 30,
+                          "notificationLocale": "en"
+                        },
+                        "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "hostname": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Compute/virtualMachines', parameters('vmName')), '2021-03-01').osProfile.computerName]"
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('OnPremRGname')), 'Microsoft.Resources/deployments', variables('DMZsubnetName'))]",
+                "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('HubRGname')), 'Microsoft.Resources/deployments', variables('HubToOnPremConnectionName'))]",
+                "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('OnPremRGname')), 'Microsoft.Resources/deployments', variables('OnPremToHubConnectionName'))]",
+                "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('OnPremRGname'))]"
               ]
             },
             {

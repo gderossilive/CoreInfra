@@ -113,6 +113,9 @@
       "type": "string",
       "defaultValue": "OnPrem"
     },
+    "MyObjectId": {
+      "type": "string"
+    },
     "OnPremVnetPrefix": {
       "type": "string",
       "defaultValue": "OnPrem-VLan"
