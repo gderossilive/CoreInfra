@@ -28,41 +28,47 @@ $adminPassword=(-join ((48..59) + (63..91) + (99..123) | Get-Random -count 15 | 
 $MyObecjectId=<Inserisci l'objectId del tuo utente> 
 $SpokesNumber=0
 ```
-Dopodichè lanciare il comando Azure CLI corrispondente allo scenario che si vuole realizzare
+### Scenario Singola VNet 
 ```
-# Scenario Singola VNet 
 az deployment sub create `
   --name "CoreMain-$Seed" `
   --location eastus `
   --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/SingolaVNet.json"  `
   --parameters `
-        Seed=$Seed `
-        MyObjectId=$MyObecjectId `
-        MyIP=$MyIP `
-        adminPassword=$adminPassword
-
-# Scenario Hub&Spoke
-az deployment sub create `
-  --name "CoreMain-$Seed" `
-  --location eastus `
-  --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/HubAndSpoke.json"  `
-  --parameters `
-        Seed=$Seed `
-        MyObjectId=$MyObecjectId `
-        MyIP=$MyIP `
-        adminPassword=$adminPassword
-
-# Scenario hybrid 
-az deployment sub create `
-  --name "CoreMain-$Seed" `
-  --location eastus `
-  --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/Hybrid.json"  `
-  --parameters `
+        https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Parameters.json `
         Seed=$Seed `
         MyObjectId=$MyObecjectId `
         MyIP=$MyIP `
         adminPassword=$adminPassword
 ```
+### Scenario Hub&Spoke
+```
+az deployment sub create `
+  --name "CoreMain-$Seed" `
+  --location eastus `
+  --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/HubAndSpoke.json"  `
+  --parameters `
+        https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Parameters.json `
+        Seed=$Seed `
+        MyObjectId=$MyObecjectId `
+        MyIP=$MyIP `
+        adminPassword=$adminPassword
+```
+### Scenario hybrid 
+```
+az deployment sub create `
+  --name "CoreMain-$Seed" `
+  --location eastus `
+  --template-uri "https://raw.githubusercontent.com/gderossilive/CoreInfra/master/ARM/Hybrid.json"  `
+  --parameters `
+        https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Parameters.json `
+        Seed=$Seed `
+        MyObjectId=$MyObecjectId `
+        MyIP=$MyIP `
+        adminPassword=$adminPassword
+```
+### Cattura dei parametri di output
+[...]
 
 # Architettura
 [...]

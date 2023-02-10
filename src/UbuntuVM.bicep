@@ -36,6 +36,7 @@ param vmName string = 'simple-vm'
 param virtualNetworkName string 
 param subnetName string
 param Command string = ''
+param CustomDnsServer string = ''
 
 var seed = substring(uniqueString(vmName, virtualNetworkName, subnetName),0,5)
 var nicName = '${vmName}-Nic-${seed}'
@@ -81,6 +82,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2021-02-01' = {
         }
       }
     ]
+    dnsSettings: {
+      dnsServers: (CustomDnsServer=='') ? [] : [CustomDnsServer]
+    }
   }
 }
 

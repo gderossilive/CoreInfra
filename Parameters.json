@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+      "Seed": {
+        "value": "abc"
+      },
+      "MyIP": {
+        "value": "81.56.1.134"
+      },
       "Location": {
         "value": "eastus"
       },
@@ -55,26 +61,14 @@
       "GatewaySubnetAddressPrefix": {
         "value": "10.10.3.0/24"
       },
-      "SpokeRgPostfix": {
-        "value": "Spokes"
-      },
-      "DeployNSG": {
-        "value": false
-      },
-      "DeployBS": {
-        "value": false
-      },
       "DeployRT": {
         "value": false
       },
-      "DeployKV": {
-        "value": false
-      },
-      "DeployDNS": {
-        "value": false
+      "SpokeRgPostfix": {
+        "value": "Spokes"
       },
       "SpokesNumber": {
-        "value": 0
+        "value": 1
       },
       "DeployProxy": {
         "value": false
@@ -84,6 +78,9 @@
       },
       "OnPremRgPostfix": {
         "value": "OnPrem"
+      },
+      "MyObjectId": {
+        "value": "172b999c-c842-4969-9202-542c4c358035"
       },
       "OnPremVnetPrefix": {
         "value": "OnPrem-VLan"

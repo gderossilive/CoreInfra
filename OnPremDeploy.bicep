@@ -174,9 +174,11 @@ module OnPrem2HubConnection 'src/NetGwConnection.bicep' = {
 }
 
 
-/*module Proxy './src/UbuntuVM.bicep' = if (DeployProxy) {
+module Proxy './src/UbuntuVM.bicep' = if (DeployProxy) {
   dependsOn: [
     DMZsubnet
+    Hub2OnPremConnection
+    OnPrem2HubConnection
   ]
   name: Proxyname
   scope: OnPremRG
@@ -186,9 +188,10 @@ module OnPrem2HubConnection 'src/NetGwConnection.bicep' = {
     subnetName: DMZsubnetName
     adminPassword: adminPassword
     location: OnPremRG.location
-    Command: 'sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://gdrcontent.z16.web.core.windows.net/whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://gdrcontent.z16.web.core.windows.net/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid'
+    CustomDnsServer: '168.63.129.16'
+    Command: 'sh && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://gdrcontent.z16.web.core.windows.net/whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://gdrcontent.z16.web.core.windows.net/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid'
   }
-}*/
+}
 
 module NoInternetOnPrem 'src/AddNsgRule.bicep' = if (DeployProxy) {
   dependsOn: [

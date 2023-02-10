@@ -41,7 +41,7 @@ var RulesetName = 'RS-${Seed}'
 var NetworkLinkName = '${HubVnetName}-link'
 var KVname = 'KV-${Seed}'
 
-resource NSG 'Microsoft.Network/networkSecurityGroups@2021-02-01' = if (DeployNSG || DeployRT) {
+resource NSG 'Microsoft.Network/networkSecurityGroups@2021-02-01' = if (DeployNSG) {
   name: NSGname
   location: location
   properties: {

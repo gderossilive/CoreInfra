@@ -4,10 +4,22 @@ param VnetName string
 param location string
 
 var subnetName = 'GatewaySubnet'
+var RgName = resourceGroup().name
+var SubscriptionId = subscription().id
+var resourceId = '/subscriptions/${SubscriptionId}/resourceGroups/${RgName}/providers/Microsoft.Network/virtualNetworkGateways/${VirtualNetGwName}/ipConfigurations/default'
 
-resource VNGWiP 'Microsoft.Network/publicIPAddresses@2022-01-01' = {
+resource VNGWiP 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
   name: GW_pip_name
   location: location
+  sku: {
+    name: 'Standard'
+    tier: 'Regional'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+    idleTimeoutInMinutes: 4
+    publicIPAddressVersion: 'IPv4'
+  }
 }
 
 resource VNet 'Microsoft.Network/virtualNetworks@2022-01-01' existing = {
@@ -19,7 +31,7 @@ resource Subnet 'Microsoft.Network/virtualNetworks/subnets@2022-01-01' existing 
   name: subnetName
 }
 
-resource VirtualNetworkGW 'Microsoft.Network/virtualNetworkGateways@2022-01-01' = {
+resource VirtualNetworkGW 'Microsoft.Network/virtualNetworkGateways@2022-07-01' = {
   name: VirtualNetGwName
   location: location
   properties: {
@@ -38,15 +50,21 @@ resource VirtualNetworkGW 'Microsoft.Network/virtualNetworkGateways@2022-01-01' 
         }
       }
     ]
+    natRules: []
+    virtualNetworkGatewayPolicyGroups: []
+    enableBgpRouteTranslationForNat: false
+    disableIPSecReplayProtection: false
     sku: {
       name: 'VpnGw1'
       tier: 'VpnGw1'
     }
     gatewayType: 'Vpn'
     vpnType: 'RouteBased'
-    enableBgp: true
+    enableBgp: false
     activeActive: false
     vpnGatewayGeneration: 'Generation1'
+    allowRemoteVnetTraffic: false
+    allowVirtualWanTraffic: false
   }
 }
 
