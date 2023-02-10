@@ -189,7 +189,7 @@ module Proxy './src/UbuntuVM.bicep' = if (DeployProxy) {
     adminPassword: adminPassword
     location: OnPremRG.location
     CustomDnsServer: '168.63.129.16'
-    Command: 'sh && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://gdrcontent.z16.web.core.windows.net/whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://gdrcontent.z16.web.core.windows.net/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid'
+    Command: 'sh && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/Whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid'
   }
 }
 
