@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.13.1.58284",
-      "templateHash": "76680105260748620"
+      "templateHash": "16001355586753659456"
     }
   },
   "parameters": {
@@ -22,119 +22,92 @@
       "type": "secureString"
     },
     "HubRgPostfix": {
-      "type": "string",
-      "defaultValue": "Hub"
+      "type": "string"
     },
     "HubVnetPrefix": {
-      "type": "string",
-      "defaultValue": "Hub-VNet"
+      "type": "string"
     },
     "InSubnetPrefix": {
-      "type": "string",
-      "defaultValue": "dns-inbound"
+      "type": "string"
     },
     "OutSubnetPrefix": {
-      "type": "string",
-      "defaultValue": "dns-outbound"
+      "type": "string"
     },
     "PEsubnetName": {
-      "type": "string",
-      "defaultValue": "PE-subnet"
+      "type": "string"
     },
     "HubVnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "10.10.0.0/16"
+      "type": "string"
     },
     "CustomDNSserver": {
-      "type": "string",
-      "defaultValue": "10.10.100.4"
+      "type": "string"
     },
     "DNSInboundSubnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "10.10.100.0/28"
+      "type": "string"
     },
     "DNSOutboundSubnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "10.10.100.16/28"
+      "type": "string"
     },
     "BastionSubnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "10.10.0.64/26"
+      "type": "string"
     },
     "PEsubnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "10.10.1.0/24"
+      "type": "string"
     },
     "FirewallSubnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "10.10.2.0/24"
+      "type": "string"
     },
     "GatewaySubnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "10.10.3.0/24"
+      "type": "string"
     },
     "DeployNSG": {
-      "type": "bool",
-      "defaultValue": false
+      "type": "bool"
     },
     "DeployRT": {
-      "type": "bool",
-      "defaultValue": false
+      "type": "bool"
     },
     "DeployBS": {
-      "type": "bool",
-      "defaultValue": false
+      "type": "bool"
     },
     "DeployDNS": {
-      "type": "bool",
-      "defaultValue": false
+      "type": "bool"
     },
     "DeployKV": {
-      "type": "bool",
-      "defaultValue": false
+      "type": "bool"
     },
     "SpokeRgPostfix": {
-      "type": "string",
-      "defaultValue": "Spokes"
+      "type": "string"
     },
     "SpokesNumber": {
       "type": "int",
       "defaultValue": 0
     },
     "DeployOnPrem": {
-      "type": "bool",
-      "defaultValue": false
+      "type": "bool"
     },
     "DeployProxy": {
-      "type": "bool",
-      "defaultValue": false
+      "type": "bool"
     },
     "OnPremRgPostfix": {
-      "type": "string",
-      "defaultValue": "OnPrem"
+      "type": "string"
     },
     "MyObjectId": {
       "type": "string"
     },
     "OnPremVnetPrefix": {
-      "type": "string",
-      "defaultValue": "OnPrem-VLan"
+      "type": "string"
     },
     "OnPremVnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "192.168.0.0/16"
+      "type": "string"
     },
     "OnPremGWvnetSubnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "192.168.0.0/26"
+      "type": "string"
     },
     "OnPremPEvnetSubnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "192.168.1.0/24"
+      "type": "string"
     },
     "OnPremDMZvnetSubnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "192.168.2.0/24"
+      "type": "string"
     }
   },
   "variables": {
@@ -1829,6 +1802,12 @@
           "DeployProxy": {
             "value": "[parameters('DeployProxy')]"
           },
+          "DeployRT": {
+            "value": "[parameters('DeployRT')]"
+          },
+          "DeployNSG": {
+            "value": "[parameters('DeployNSG')]"
+          },
           "HubRGname": {
             "value": "[variables('HubRgName')]"
           },
@@ -1877,7 +1856,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.13.1.58284",
-              "templateHash": "6488243903095888314"
+              "templateHash": "8424704548573006916"
             }
           },
           "parameters": {
@@ -1912,6 +1891,12 @@
               "type": "string"
             },
             "DeployProxy": {
+              "type": "bool"
+            },
+            "DeployRT": {
+              "type": "bool"
+            },
+            "DeployNSG": {
               "type": "bool"
             },
             "FwIP": {
@@ -1952,6 +1937,7 @@
               "location": "[parameters('location')]"
             },
             {
+              "condition": "[parameters('DeployNSG')]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
               "name": "[parameters('OnPremRGname')]",
@@ -2012,6 +1998,7 @@
               ]
             },
             {
+              "condition": "[parameters('DeployRT')]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
               "name": "OnPremRT",
@@ -2838,7 +2825,7 @@
                     "value": "168.63.129.16"
                   },
                   "Command": {
-                    "value": "sh && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://gdrcontent.z16.web.core.windows.net/whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://gdrcontent.z16.web.core.windows.net/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid"
+                    "value": "sh && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/Whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid"
                   }
                 },
                 "template": {
