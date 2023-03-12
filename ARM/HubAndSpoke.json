@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.13.1.58284",
-      "templateHash": "76680105260748620"
+      "version": "0.14.85.62628",
+      "templateHash": "13405157972346793994"
     }
   },
   "parameters": {
@@ -251,8 +251,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.13.1.58284",
-              "templateHash": "8035997970210935366"
+              "version": "0.14.85.62628",
+              "templateHash": "3393311383233583767"
             }
           },
           "parameters": {
@@ -267,7 +267,7 @@
               "type": "string"
             },
             "adminPassword": {
-              "type": "secureString"
+              "type": "securestring"
             },
             "CustomDNSserver": {
               "type": "string",
@@ -748,8 +748,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "1959112946261389248"
+                      "version": "0.14.85.62628",
+                      "templateHash": "7096524277702050664"
                     }
                   },
                   "parameters": {
@@ -1004,8 +1004,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "2522960937511901016"
+                      "version": "0.14.85.62628",
+                      "templateHash": "13496549592849105470"
                     }
                   },
                   "parameters": {
@@ -1316,8 +1316,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.13.1.58284",
-              "templateHash": "7600131726895614727"
+              "version": "0.14.85.62628",
+              "templateHash": "13252889183021041729"
             }
           },
           "parameters": {
@@ -1418,8 +1418,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "5035000631543288249"
+                      "version": "0.14.85.62628",
+                      "templateHash": "8093875283131725207"
                     }
                   },
                   "parameters": {
@@ -1633,8 +1633,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "3177052004775683854"
+                      "version": "0.14.85.62628",
+                      "templateHash": "6588622071466963370"
                     }
                   },
                   "parameters": {
@@ -1729,8 +1729,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "3177052004775683854"
+                      "version": "0.14.85.62628",
+                      "templateHash": "6588622071466963370"
                     }
                   },
                   "parameters": {
@@ -1830,6 +1830,12 @@
           "DeployProxy": {
             "value": "[parameters('DeployProxy')]"
           },
+          "DeployRT": {
+            "value": "[parameters('DeployRT')]"
+          },
+          "DeployNSG": {
+            "value": "[parameters('DeployNSG')]"
+          },
           "HubRGname": {
             "value": "[variables('HubRgName')]"
           },
@@ -1877,8 +1883,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.13.1.58284",
-              "templateHash": "6488243903095888314"
+              "version": "0.14.85.62628",
+              "templateHash": "14620685077866061959"
             }
           },
           "parameters": {
@@ -1915,11 +1921,17 @@
             "DeployProxy": {
               "type": "bool"
             },
+            "DeployRT": {
+              "type": "bool"
+            },
+            "DeployNSG": {
+              "type": "bool"
+            },
             "FwIP": {
               "type": "string"
             },
             "adminPassword": {
-              "type": "secureString"
+              "type": "securestring"
             },
             "Seed": {
               "type": "string"
@@ -1942,8 +1954,7 @@
             "HubVirtualNetworkGWName": "[format('HubVNGW-{0}', parameters('Seed'))]",
             "Proxyname": "[format('Proxy-{0}', parameters('Seed'))]",
             "PEsubnetName": "PE-Subnet",
-            "DMZsubnetName": "DMZ-Subnet",
-            "KVname": "[format('KV-{0}', parameters('Seed'))]"
+            "DMZsubnetName": "DMZ-Subnet"
           },
           "resources": [
             {
@@ -1953,6 +1964,7 @@
               "location": "[parameters('location')]"
             },
             {
+              "condition": "[parameters('DeployNSG')]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
               "name": "[parameters('OnPremRGname')]",
@@ -1976,8 +1988,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "255911022193077737"
+                      "version": "0.14.85.62628",
+                      "templateHash": "9707448790784301121"
                     }
                   },
                   "parameters": {
@@ -2013,6 +2025,7 @@
               ]
             },
             {
+              "condition": "[parameters('DeployRT')]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
               "name": "OnPremRT",
@@ -2039,8 +2052,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "9544299452600144192"
+                      "version": "0.14.85.62628",
+                      "templateHash": "3606277552070555563"
                     }
                   },
                   "parameters": {
@@ -2127,8 +2140,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "7506857369516905617"
+                      "version": "0.14.85.62628",
+                      "templateHash": "676544018214685287"
                     }
                   },
                   "parameters": {
@@ -2201,8 +2214,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "8759505905295603143"
+                      "version": "0.14.85.62628",
+                      "templateHash": "11555614204196144000"
                     }
                   },
                   "parameters": {
@@ -2276,8 +2289,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "8759505905295603143"
+                      "version": "0.14.85.62628",
+                      "templateHash": "11555614204196144000"
                     }
                   },
                   "parameters": {
@@ -2351,8 +2364,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "8759505905295603143"
+                      "version": "0.14.85.62628",
+                      "templateHash": "11555614204196144000"
                     }
                   },
                   "parameters": {
@@ -2422,8 +2435,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "16924972989045002403"
+                      "version": "0.14.85.62628",
+                      "templateHash": "9265682868260294736"
                     }
                   },
                   "parameters": {
@@ -2545,8 +2558,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "16924972989045002403"
+                      "version": "0.14.85.62628",
+                      "templateHash": "9265682868260294736"
                     }
                   },
                   "parameters": {
@@ -2667,8 +2680,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "16932854694310849315"
+                      "version": "0.14.85.62628",
+                      "templateHash": "11595627890722591121"
                     }
                   },
                   "parameters": {
@@ -2752,8 +2765,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "16932854694310849315"
+                      "version": "0.14.85.62628",
+                      "templateHash": "11595627890722591121"
                     }
                   },
                   "parameters": {
@@ -2839,7 +2852,7 @@
                     "value": "168.63.129.16"
                   },
                   "Command": {
-                    "value": "sh && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://gdrcontent.z16.web.core.windows.net/whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://gdrcontent.z16.web.core.windows.net/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid"
+                    "value": "sh && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/Whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid"
                   }
                 },
                 "template": {
@@ -2848,8 +2861,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "4015490988760651506"
+                      "version": "0.14.85.62628",
+                      "templateHash": "10428200565988315121"
                     }
                   },
                   "parameters": {
@@ -2861,7 +2874,7 @@
                       }
                     },
                     "adminPassword": {
-                      "type": "secureString",
+                      "type": "securestring",
                       "minLength": 12,
                       "metadata": {
                         "description": "Password for the Virtual Machine."
@@ -3071,7 +3084,7 @@
               ]
             },
             {
-              "condition": "[parameters('DeployProxy')]",
+              "condition": "[parameters('DeployNSG')]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
               "name": "NoInternetOnPrem",
@@ -3131,8 +3144,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.13.1.58284",
-                      "templateHash": "14298841443532607115"
+                      "version": "0.14.85.62628",
+                      "templateHash": "17943624777475516433"
                     }
                   },
                   "parameters": {
@@ -3211,15 +3224,11 @@
             },
             "NSGname": {
               "type": "string",
-              "value": "[variables('networkSecurityGroupName')]"
+              "value": "[if(parameters('DeployNSG'), variables('networkSecurityGroupName'), '')]"
             },
             "PEsubnetName": {
               "type": "string",
               "value": "[variables('PEsubnetName')]"
-            },
-            "KVname": {
-              "type": "string",
-              "value": "[variables('KVname')]"
             },
             "ProxyName": {
               "type": "string",
