@@ -25,6 +25,10 @@
     "MyObjectId": {
       "type": "string"
     },
+    "SpokesNumber": {
+      "type": "int",
+      "defaultValue": 0
+    },
     "HubRgPostfix": {
       "type": "string",
       "defaultValue": "Hub"
@@ -100,10 +104,6 @@
     "SpokeRgPostfix": {
       "type": "string",
       "defaultValue": "Spokes"
-    },
-    "SpokesNumber": {
-      "type": "int",
-      "defaultValue": 0
     },
     "DeployOnPrem": {
       "type": "bool",
