@@ -17,13 +17,17 @@
     },
     "Location": {
       "type": "string",
-      "defaultValue": "eastus"
+      "defaultValue": "westeurope"
     },
     "adminPassword": {
       "type": "secureString"
     },
     "MyObjectId": {
       "type": "string"
+    },
+    "SpokesNumber": {
+      "type": "int",
+      "defaultValue": 1
     },
     "HubRgPostfix": {
       "type": "string",
@@ -100,10 +104,6 @@
     "SpokeRgPostfix": {
       "type": "string",
       "defaultValue": "Spokes"
-    },
-    "SpokesNumber": {
-      "type": "int",
-      "defaultValue": 0
     },
     "DeployOnPrem": {
       "type": "bool",

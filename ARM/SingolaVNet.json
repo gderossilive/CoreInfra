@@ -17,7 +17,7 @@
     },
     "Location": {
       "type": "string",
-      "defaultValue": "eastus"
+      "defaultValue": "westeurope"
     },
     "adminPassword": {
       "type": "secureString"
