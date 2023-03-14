@@ -71,4 +71,28 @@ az deployment sub create `
 [...]
 
 # Architettura
+Questa soluzione è basata sulla blueprint ["Azure Security Benchmark Foundation"](https://learn.microsoft.com/en-us/azure/governance/blueprints/samples/azure-security-benchmark-foundation/) che fornisce una serie di pattern per la costruzione di un'ambiente sicuro su Azure. Proprio per questo:
+- prevede l'utilizzo di User Defined Route (UDR) per convogliare sempre il traffico in uscita su internet verso un firewall
+- utilizza Network Security Group (NSG) per regolare il traffico in ingresso ed in uscita dalle diverse subnet
+- non permette l'accesso diretto a VM tramite indirizzo IP pubblico, ma solo mediato da Azure Bastion
+- utilizza un Key Vault per custodire i secret ed i certificati
+- fornisce un DNS Resolver per facilitare l'adozione di private endpoint per le risorse PaaS 
+- l'uscita su internet del traffico on-prem è anch'esso generalmente mediato da un proxy (Squid)
+
+L'architettura completa della soluzione è rappresentata nella figura sotto
+![Architettura completa](https://github.com/gderossilive/CoreInfra/blob/master/doc/hybrid.jpg?raw=true "Architettura Completa")
+dove è possibile riconoscere 1 Hub, 2 Spoke e una VLAN onprem collegata all'Hub attraverso una VPN site-to-site.
+
+## Architettura dell'Hub
+L'Hub è composto da una VNet chiamata Hub-Vnet al cui interno sono organizzate le seguenti subnet:
+- GatewaySubnet che ospita il Virtual Network Gateway utilizzato per instaurare la site-to-site VPN verso l'onprem
+- AzureFirewallSubnet che ospita gli endpoint dell'Azure Fiewall utilizzato per regolare il traffico da e verso internet all'interno dell'intera piattaforma cloud
+- AzureBastionSubnet che ospita gli endpoint del servizio Azure Bastion utilizzato per l'accesso sicuro a tutte le vm presenti in cloud ed onprem
+- DNS-outbound e DNS-inbound che ospitano gli endpoint del servizio Azure DNS Resolver
+- PE-Subnet utilizzata per ospitare eventuali private endpoint e VM 
+
+## Architettura degli Spoke
+[...]
+
+## Architettura dell'OnPrem
 [...]
