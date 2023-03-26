@@ -1,1 +1,0 @@
-# Singola VNet Architecture

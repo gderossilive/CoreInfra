@@ -1,1 +1,0 @@
-# Hub & Spoke Architecture
