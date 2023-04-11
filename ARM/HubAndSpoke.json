@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.14.85.62628",
-      "templateHash": "13405157972346793994"
+      "version": "0.15.31.15270",
+      "templateHash": "15201365170942550626"
     }
   },
   "parameters": {
@@ -143,7 +143,7 @@
     "HubVnetName": "[format('{0}-{1}', parameters('HubVnetPrefix'), parameters('Seed'))]",
     "InSubnetName": "[format('{0}-{1}', parameters('InSubnetPrefix'), parameters('Seed'))]",
     "OutSubnetName": "[format('{0}-{1}', parameters('OutSubnetPrefix'), parameters('Seed'))]",
-    "NSGname": "[format('NSG-{0}', parameters('Seed'))]",
+    "NSGname": "[format('PE-NSG-{0}', parameters('Seed'))]",
     "RouteTabelName": "[format('RT-{0}', parameters('Seed'))]",
     "SpokeRgName": "[format('{0}-{1}', parameters('Seed'), parameters('SpokeRgPostfix'))]",
     "OnPremRGname": "[format('{0}-{1}', parameters('Seed'), parameters('OnPremRgPostfix'))]",
@@ -243,6 +243,12 @@
           },
           "DeployKV": {
             "value": "[parameters('DeployKV')]"
+          },
+          "OnPremVnetAddressPrefix": {
+            "value": "[parameters('OnPremVnetAddressPrefix')]"
+          },
+          "CustomDNSserver": {
+            "value": "[parameters('CustomDNSserver')]"
           }
         },
         "template": {
@@ -251,8 +257,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.14.85.62628",
-              "templateHash": "3393311383233583767"
+              "version": "0.15.31.15270",
+              "templateHash": "3512298934670289564"
             }
           },
           "parameters": {
@@ -270,8 +276,7 @@
               "type": "securestring"
             },
             "CustomDNSserver": {
-              "type": "string",
-              "defaultValue": "10.10.0.4"
+              "type": "string"
             },
             "NSGname": {
               "type": "string"
@@ -284,6 +289,9 @@
               "defaultValue": false
             },
             "MyIPaddress": {
+              "type": "string"
+            },
+            "OnPremVnetAddressPrefix": {
               "type": "string"
             },
             "HubVnetName": {
@@ -342,7 +350,8 @@
             "ResolverName": "[format('DNS-{0}', parameters('Seed'))]",
             "RulesetName": "[format('RS-{0}', parameters('Seed'))]",
             "NetworkLinkName": "[format('{0}-link', parameters('HubVnetName'))]",
-            "KVname": "[format('KV-{0}', parameters('Seed'))]"
+            "KVname": "[format('KV-{0}', parameters('Seed'))]",
+            "GwRouteTableName": "[format('GwRT-{0}', parameters('Seed'))]"
           },
           "resources": [
             {
@@ -356,10 +365,134 @@
               }
             },
             {
+              "condition": "[parameters('DeployDNS')]",
+              "type": "Microsoft.Network/networkSecurityGroups",
+              "apiVersion": "2021-02-01",
+              "name": "[format('DnsIn-{0}', parameters('Seed'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "securityRules": [
+                  {
+                    "name": "AllowAnyCustom53Inbound",
+                    "properties": {
+                      "protocol": "*",
+                      "sourcePortRange": "*",
+                      "destinationPortRange": "53",
+                      "sourceAddressPrefix": "*",
+                      "destinationAddressPrefix": "VirtualNetwork",
+                      "access": "Allow",
+                      "priority": 100,
+                      "direction": "Inbound",
+                      "sourcePortRanges": [],
+                      "destinationPortRanges": [],
+                      "sourceAddressPrefixes": [],
+                      "destinationAddressPrefixes": []
+                    }
+                  },
+                  {
+                    "name": "DenyAnyInbound",
+                    "properties": {
+                      "protocol": "*",
+                      "sourcePortRange": "*",
+                      "destinationPortRange": "*",
+                      "sourceAddressPrefix": "VirtualNetwork",
+                      "destinationAddressPrefix": "VirtualNetwork",
+                      "access": "Deny",
+                      "priority": 110,
+                      "direction": "Inbound",
+                      "sourcePortRanges": [],
+                      "destinationPortRanges": [],
+                      "sourceAddressPrefixes": [],
+                      "destinationAddressPrefixes": []
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "condition": "[parameters('DeployDNS')]",
+              "type": "Microsoft.Network/networkSecurityGroups",
+              "apiVersion": "2021-02-01",
+              "name": "[format('DnsOut-{0}', parameters('Seed'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "securityRules": [
+                  {
+                    "name": "AllowAnyCustom53Inbound",
+                    "properties": {
+                      "protocol": "*",
+                      "sourcePortRange": "*",
+                      "destinationPortRange": "53",
+                      "sourceAddressPrefix": "*",
+                      "destinationAddressPrefix": "VirtualNetwork",
+                      "access": "Allow",
+                      "priority": 100,
+                      "direction": "Inbound",
+                      "sourcePortRanges": [],
+                      "destinationPortRanges": [],
+                      "sourceAddressPrefixes": [],
+                      "destinationAddressPrefixes": []
+                    }
+                  },
+                  {
+                    "name": "DenyAnyInbound",
+                    "properties": {
+                      "protocol": "*",
+                      "sourcePortRange": "*",
+                      "destinationPortRange": "*",
+                      "sourceAddressPrefix": "VirtualNetwork",
+                      "destinationAddressPrefix": "VirtualNetwork",
+                      "access": "Deny",
+                      "priority": 110,
+                      "direction": "Inbound",
+                      "sourcePortRanges": [],
+                      "destinationPortRanges": [],
+                      "sourceAddressPrefixes": [],
+                      "destinationAddressPrefixes": []
+                    }
+                  },
+                  {
+                    "name": "AllowAnyCustom53Outbound",
+                    "properties": {
+                      "protocol": "*",
+                      "sourcePortRange": "*",
+                      "destinationPortRange": "53",
+                      "sourceAddressPrefix": "VirtualNetwork",
+                      "destinationAddressPrefix": "VirtualNetwork",
+                      "access": "Allow",
+                      "priority": 100,
+                      "direction": "Outbound",
+                      "sourcePortRanges": [],
+                      "destinationPortRanges": [],
+                      "sourceAddressPrefixes": [],
+                      "destinationAddressPrefixes": []
+                    }
+                  },
+                  {
+                    "name": "DenyAnyOutbound",
+                    "properties": {
+                      "protocol": "*",
+                      "sourcePortRange": "*",
+                      "destinationPortRange": "*",
+                      "sourceAddressPrefix": "VirtualNetwork",
+                      "destinationAddressPrefix": "VirtualNetwork",
+                      "access": "Deny",
+                      "priority": 110,
+                      "direction": "Outbound",
+                      "sourcePortRanges": [],
+                      "destinationPortRanges": [],
+                      "sourceAddressPrefixes": [],
+                      "destinationAddressPrefixes": []
+                    }
+                  }
+                ]
+              }
+            },
+            {
               "condition": "[parameters('DeployBS')]",
               "type": "Microsoft.Network/networkSecurityGroups",
               "apiVersion": "2021-02-01",
-              "name": "[format('Bastion-{0}', parameters('NSGname'))]",
+              "name": "[format('Bastion-{0}', parameters('Seed'))]",
               "location": "[parameters('location')]",
               "properties": {
                 "securityRules": [
@@ -464,6 +597,61 @@
               ]
             },
             {
+              "condition": "[parameters('DeployRT')]",
+              "type": "Microsoft.Network/routeTables",
+              "apiVersion": "2021-08-01",
+              "name": "[variables('GwRouteTableName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "disableBgpRoutePropagation": "[parameters('disableBgpRoutePropagation')]",
+                "routes": []
+              }
+            },
+            {
+              "condition": "[parameters('DeployRT')]",
+              "type": "Microsoft.Network/routeTables/routes",
+              "apiVersion": "2021-08-01",
+              "name": "[format('{0}/ToFW', variables('GwRouteTableName'))]",
+              "properties": {
+                "addressPrefix": "10.0.0.0/8",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "[if(parameters('DeployRT'), reference(resourceId('Microsoft.Resources/deployments', variables('FwName')), '2020-10-01').outputs.FwIP.value, '')]",
+                "hasBgpOverride": false
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('FwName'))]",
+                "[resourceId('Microsoft.Network/routeTables', variables('GwRouteTableName'))]"
+              ]
+            },
+            {
+              "condition": "[parameters('DeployRT')]",
+              "type": "Microsoft.Network/routeTables/routes",
+              "apiVersion": "2021-08-01",
+              "name": "[format('{0}/ToGwSubnet', variables('GwRouteTableName'))]",
+              "properties": {
+                "addressPrefix": "[parameters('GatewaySubnetAddressPrefix')]",
+                "nextHopType": "VnetLocal",
+                "hasBgpOverride": false
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', variables('GwRouteTableName'))]"
+              ]
+            },
+            {
+              "condition": "[parameters('DeployRT')]",
+              "type": "Microsoft.Network/routeTables/routes",
+              "apiVersion": "2021-08-01",
+              "name": "[format('{0}/ToOnPrem', variables('GwRouteTableName'))]",
+              "properties": {
+                "addressPrefix": "[parameters('OnPremVnetAddressPrefix')]",
+                "nextHopType": "VirtualNetworkGateway",
+                "hasBgpOverride": false
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', variables('GwRouteTableName'))]"
+              ]
+            },
+            {
               "type": "Microsoft.Network/virtualNetworks",
               "apiVersion": "2021-02-01",
               "name": "[parameters('HubVnetName')]",
@@ -484,6 +672,7 @@
                       "addressPrefix": "[parameters('DNSInboundSubnetAddressPrefix')]",
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled",
+                      "networkSecurityGroup": "[if(parameters('DeployDNS'), createObject('id', resourceId('Microsoft.Network/networkSecurityGroups', format('DnsIn-{0}', parameters('Seed')))), null())]",
                       "delegations": [
                         {
                           "name": "Microsoft.Network.dnsResolvers",
@@ -500,6 +689,7 @@
                       "addressPrefix": "[parameters('DNSOutboundSubnetAddressPrefix')]",
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled",
+                      "networkSecurityGroup": "[if(parameters('DeployDNS'), createObject('id', resourceId('Microsoft.Network/networkSecurityGroups', format('DnsOut-{0}', parameters('Seed')))), null())]",
                       "delegations": [
                         {
                           "name": "Microsoft.Network.dnsResolvers",
@@ -516,7 +706,7 @@
                       "addressPrefix": "[parameters('BastionSubnetAddressPrefix')]",
                       "privateEndpointNetworkPolicies": "Disabled",
                       "privateLinkServiceNetworkPolicies": "Enabled",
-                      "networkSecurityGroup": "[if(parameters('DeployBS'), createObject('id', resourceId('Microsoft.Network/networkSecurityGroups', format('Bastion-{0}', parameters('NSGname')))), null())]"
+                      "networkSecurityGroup": "[if(parameters('DeployBS'), createObject('id', resourceId('Microsoft.Network/networkSecurityGroups', format('Bastion-{0}', parameters('Seed')))), null())]"
                     }
                   },
                   {
@@ -542,13 +732,17 @@
                     "properties": {
                       "addressPrefix": "[parameters('GatewaySubnetAddressPrefix')]",
                       "privateEndpointNetworkPolicies": "Disabled",
-                      "privateLinkServiceNetworkPolicies": "Enabled"
+                      "privateLinkServiceNetworkPolicies": "Enabled",
+                      "routeTable": "[if(parameters('DeployRT'), createObject('id', resourceId('Microsoft.Network/routeTables', variables('GwRouteTableName'))), null())]"
                     }
                   }
                 ]
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', format('Bastion-{0}', parameters('NSGname')))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', format('Bastion-{0}', parameters('Seed')))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', format('DnsIn-{0}', parameters('Seed')))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', format('DnsOut-{0}', parameters('Seed')))]",
+                "[resourceId('Microsoft.Network/routeTables', variables('GwRouteTableName'))]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('NSGname'))]",
                 "[resourceId('Microsoft.Network/routeTables', parameters('RouteTableName'))]"
               ]
@@ -740,6 +934,9 @@
                   },
                   "location": {
                     "value": "[parameters('location')]"
+                  },
+                  "CustomDnsIp": {
+                    "value": "[parameters('CustomDNSserver')]"
                   }
                 },
                 "template": {
@@ -748,8 +945,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "7096524277702050664"
+                      "version": "0.15.31.15270",
+                      "templateHash": "15614764446197980312"
                     }
                   },
                   "parameters": {
@@ -760,8 +957,7 @@
                       "type": "string"
                     },
                     "CustomDnsIp": {
-                      "type": "string",
-                      "defaultValue": "10.10.100.4"
+                      "type": "string"
                     },
                     "Seed": {
                       "type": "string"
@@ -808,10 +1004,10 @@
                     },
                     {
                       "type": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
-                      "apiVersion": "2021-08-01",
-                      "name": "[format('{0}/{1}', variables('AzFwPolicyName'), 'DefaultApplicationRuleCollectionGroup')]",
+                      "apiVersion": "2022-09-01",
+                      "name": "[format('{0}/{1}', variables('AzFwPolicyName'), 'DefaultNetworkRuleCollectionGroup')]",
                       "properties": {
-                        "priority": 300,
+                        "priority": 200,
                         "ruleCollections": [
                           {
                             "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
@@ -820,86 +1016,148 @@
                             },
                             "rules": [
                               {
-                                "ruleType": "ApplicationRule",
-                                "name": "SpokeInternetSurf",
-                                "protocols": [
-                                  {
-                                    "protocolType": "Http",
-                                    "port": 80
-                                  },
-                                  {
-                                    "protocolType": "Https",
-                                    "port": 443
-                                  }
+                                "ruleType": "NetworkRule",
+                                "name": "OnPrem-Hub",
+                                "ipProtocols": [
+                                  "TCP",
+                                  "UDP"
                                 ],
-                                "fqdnTags": [],
-                                "webCategories": [],
-                                "targetFqdns": [
-                                  "*"
-                                ],
-                                "targetUrls": [],
-                                "terminateTLS": false,
-                                "sourceAddresses": [
-                                  "10.20.0.0/16"
-                                ],
-                                "destinationAddresses": [],
-                                "sourceIpGroups": []
-                              },
-                              {
-                                "ruleType": "ApplicationRule",
-                                "name": "HubInternetSurf",
-                                "protocols": [
-                                  {
-                                    "protocolType": "Http",
-                                    "port": 80
-                                  },
-                                  {
-                                    "protocolType": "Https",
-                                    "port": 443
-                                  }
-                                ],
-                                "fqdnTags": [],
-                                "webCategories": [],
-                                "targetFqdns": [
-                                  "*"
-                                ],
-                                "targetUrls": [],
-                                "terminateTLS": false,
-                                "sourceAddresses": [
-                                  "10.10.0.0/16"
-                                ],
-                                "destinationAddresses": [],
-                                "sourceIpGroups": []
-                              },
-                              {
-                                "ruleType": "ApplicationRule",
-                                "name": "OnPremInternetSurf",
-                                "protocols": [
-                                  {
-                                    "protocolType": "Http",
-                                    "port": 80
-                                  },
-                                  {
-                                    "protocolType": "Https",
-                                    "port": 443
-                                  }
-                                ],
-                                "fqdnTags": [],
-                                "webCategories": [],
-                                "targetFqdns": [
-                                  "*"
-                                ],
-                                "targetUrls": [],
-                                "terminateTLS": false,
                                 "sourceAddresses": [
                                   "192.168.0.0/16"
                                 ],
-                                "destinationAddresses": [],
-                                "sourceIpGroups": []
+                                "sourceIpGroups": [],
+                                "destinationAddresses": [
+                                  "10.10.0.0/16"
+                                ],
+                                "destinationIpGroups": [],
+                                "destinationFqdns": [],
+                                "destinationPorts": [
+                                  "53"
+                                ]
+                              },
+                              {
+                                "ruleType": "NetworkRule",
+                                "name": "Spokes-Hub",
+                                "ipProtocols": [
+                                  "TCP",
+                                  "UDP"
+                                ],
+                                "sourceAddresses": [
+                                  "10.20.0.0/16"
+                                ],
+                                "sourceIpGroups": [],
+                                "destinationAddresses": [
+                                  "10.10.0.0/16"
+                                ],
+                                "destinationIpGroups": [],
+                                "destinationFqdns": [],
+                                "destinationPorts": [
+                                  "53"
+                                ]
                               }
                             ],
-                            "name": "InternetSurfing",
-                            "priority": 100
+                            "name": "DNS-traffic",
+                            "priority": 220
+                          },
+                          {
+                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                            "action": {
+                              "type": "Allow"
+                            },
+                            "rules": [
+                              {
+                                "ruleType": "NetworkRule",
+                                "name": "OnPrem-Cloud",
+                                "ipProtocols": [
+                                  "TCP"
+                                ],
+                                "sourceAddresses": [
+                                  "192.168.0.0/16"
+                                ],
+                                "sourceIpGroups": [],
+                                "destinationAddresses": [
+                                  "10.0.0.0/8"
+                                ],
+                                "destinationIpGroups": [],
+                                "destinationFqdns": [],
+                                "destinationPorts": [
+                                  "80",
+                                  "443"
+                                ]
+                              },
+                              {
+                                "ruleType": "NetworkRule",
+                                "name": "Cloud-Everywhere",
+                                "ipProtocols": [
+                                  "TCP"
+                                ],
+                                "sourceAddresses": [
+                                  "10.0.0.0/8"
+                                ],
+                                "sourceIpGroups": [],
+                                "destinationAddresses": [
+                                  "*"
+                                ],
+                                "destinationIpGroups": [],
+                                "destinationFqdns": [],
+                                "destinationPorts": [
+                                  "80",
+                                  "443"
+                                ]
+                              }
+                            ],
+                            "name": "HTTP-traffic",
+                            "priority": 200
+                          },
+                          {
+                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                            "action": {
+                              "type": "Allow"
+                            },
+                            "rules": [
+                              {
+                                "ruleType": "NetworkRule",
+                                "name": "Bastion-OnPrem",
+                                "ipProtocols": [
+                                  "TCP"
+                                ],
+                                "sourceAddresses": [
+                                  "10.10.0.0/16"
+                                ],
+                                "sourceIpGroups": [],
+                                "destinationAddresses": [
+                                  "192.168.0.0/16"
+                                ],
+                                "destinationIpGroups": [],
+                                "destinationFqdns": [],
+                                "destinationPorts": [
+                                  "22",
+                                  "3389"
+                                ]
+                              },
+                              {
+                                "ruleType": "NetworkRule",
+                                "name": "Bastion-Azure",
+                                "ipProtocols": [
+                                  "TCP"
+                                ],
+                                "sourceAddresses": [
+                                  "10.10.0.0/16"
+                                ],
+                                "sourceIpGroups": [],
+                                "destinationAddresses": [
+                                  "10.20.0.0/16"
+                                ],
+                                "destinationIpGroups": [],
+                                "destinationFqdns": [],
+                                "destinationPorts": [
+                                  "22",
+                                  "3389"
+                                ]
+                              }
+                            ],
+                            "name": "Bastion-traffic",
+                            "priority": 210
                           }
                         ]
                       },
@@ -1004,8 +1262,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "13496549592849105470"
+                      "version": "0.15.31.15270",
+                      "templateHash": "16096351620543453476"
                     }
                   },
                   "parameters": {
@@ -1316,8 +1574,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.14.85.62628",
-              "templateHash": "13252889183021041729"
+              "version": "0.15.31.15270",
+              "templateHash": "14005419755876063135"
             }
           },
           "parameters": {
@@ -1418,8 +1676,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "8093875283131725207"
+                      "version": "0.15.31.15270",
+                      "templateHash": "1628635177734341896"
                     }
                   },
                   "parameters": {
@@ -1633,8 +1891,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "6588622071466963370"
+                      "version": "0.15.31.15270",
+                      "templateHash": "7862960037007479257"
                     }
                   },
                   "parameters": {
@@ -1729,8 +1987,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "6588622071466963370"
+                      "version": "0.15.31.15270",
+                      "templateHash": "7862960037007479257"
                     }
                   },
                   "parameters": {
@@ -1883,8 +2141,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.14.85.62628",
-              "templateHash": "14620685077866061959"
+              "version": "0.15.31.15270",
+              "templateHash": "497656502310330144"
             }
           },
           "parameters": {
@@ -1988,8 +2246,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "9707448790784301121"
+                      "version": "0.15.31.15270",
+                      "templateHash": "6202237837535452730"
                     }
                   },
                   "parameters": {
@@ -2052,8 +2310,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "3606277552070555563"
+                      "version": "0.15.31.15270",
+                      "templateHash": "5290321894253746815"
                     }
                   },
                   "parameters": {
@@ -2140,8 +2398,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "676544018214685287"
+                      "version": "0.15.31.15270",
+                      "templateHash": "9118660236243462401"
                     }
                   },
                   "parameters": {
@@ -2214,8 +2472,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "11555614204196144000"
+                      "version": "0.15.31.15270",
+                      "templateHash": "17106954262802890923"
                     }
                   },
                   "parameters": {
@@ -2289,8 +2547,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "11555614204196144000"
+                      "version": "0.15.31.15270",
+                      "templateHash": "17106954262802890923"
                     }
                   },
                   "parameters": {
@@ -2364,8 +2622,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "11555614204196144000"
+                      "version": "0.15.31.15270",
+                      "templateHash": "17106954262802890923"
                     }
                   },
                   "parameters": {
@@ -2435,8 +2693,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "9265682868260294736"
+                      "version": "0.15.31.15270",
+                      "templateHash": "14329600319302797925"
                     }
                   },
                   "parameters": {
@@ -2558,8 +2816,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "9265682868260294736"
+                      "version": "0.15.31.15270",
+                      "templateHash": "14329600319302797925"
                     }
                   },
                   "parameters": {
@@ -2680,8 +2938,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "11595627890722591121"
+                      "version": "0.15.31.15270",
+                      "templateHash": "11565967162420027093"
                     }
                   },
                   "parameters": {
@@ -2765,8 +3023,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "11595627890722591121"
+                      "version": "0.15.31.15270",
+                      "templateHash": "11565967162420027093"
                     }
                   },
                   "parameters": {
@@ -2852,7 +3110,7 @@
                     "value": "168.63.129.16"
                   },
                   "Command": {
-                    "value": "sh && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/Whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid"
+                    "value": "bash && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/Whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid"
                   }
                 },
                 "template": {
@@ -2861,8 +3119,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "10428200565988315121"
+                      "version": "0.15.31.15270",
+                      "templateHash": "16762210392557437199"
                     }
                   },
                   "parameters": {
@@ -3144,8 +3402,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.14.85.62628",
-                      "templateHash": "17943624777475516433"
+                      "version": "0.15.31.15270",
+                      "templateHash": "7331157103405031766"
                     }
                   },
                   "parameters": {
@@ -3293,7 +3551,7 @@
     },
     "ProxyName": {
       "type": "string",
-      "value": "[if(parameters('DeployProxy'), reference(subscriptionResourceId('Microsoft.Resources/deployments', format('OnPremDeploy-{0}', parameters('Seed'))), '2020-10-01').outputs.ProxyName.value, '')]"
+      "value": "[if(and(parameters('DeployOnPrem'), parameters('DeployProxy')), reference(subscriptionResourceId('Microsoft.Resources/deployments', format('OnPremDeploy-{0}', parameters('Seed'))), '2020-10-01').outputs.ProxyName.value, '')]"
     },
     "DMZsubnetName": {
       "type": "string",
