@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "15201365170942550626"
+      "templateHash": "4127368209239869908"
     }
   },
   "parameters": {
@@ -230,7 +230,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "3512298934670289564"
+              "templateHash": "6733601425882103424"
             }
           },
           "parameters": {
@@ -723,13 +723,13 @@
               "condition": "[parameters('DeployRT')]",
               "type": "Microsoft.Network/networkSecurityGroups/securityRules",
               "apiVersion": "2021-08-01",
-              "name": "[format('{0}/NoInternetHub', parameters('NSGname'))]",
+              "name": "[format('{0}/InternetAccess', parameters('NSGname'))]",
               "properties": {
                 "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "sourceAddressPrefix": "*",
                 "destinationAddressPrefix": "Internet",
-                "access": "Deny",
+                "access": "Allow",
                 "priority": 1000,
                 "direction": "Outbound",
                 "sourcePortRanges": [],
@@ -1547,7 +1547,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "14005419755876063135"
+              "templateHash": "13931583082564589876"
             }
           },
           "parameters": {
@@ -1649,7 +1649,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.15.31.15270",
-                      "templateHash": "1628635177734341896"
+                      "templateHash": "6493845879662266630"
                     }
                   },
                   "parameters": {
@@ -1735,13 +1735,13 @@
                       "condition": "[parameters('DeployRT')]",
                       "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                       "apiVersion": "2021-08-01",
-                      "name": "[format('{0}/NoInternetHub', parameters('NSGname'))]",
+                      "name": "[format('{0}/InternetAccess', parameters('NSGname'))]",
                       "properties": {
                         "protocol": "Tcp",
                         "sourcePortRange": "*",
                         "sourceAddressPrefix": "*",
                         "destinationAddressPrefix": "Internet",
-                        "access": "Deny",
+                        "access": "Allow",
                         "priority": 1000,
                         "direction": "Outbound",
                         "sourcePortRanges": [],
@@ -2114,7 +2114,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "497656502310330144"
+              "templateHash": "7386833925852473501"
             }
           },
           "parameters": {
@@ -3082,7 +3082,7 @@
                     "value": "168.63.129.16"
                   },
                   "Command": {
-                    "value": "bash && sudo apt-get update && sudo apt-get install -y squid apache2-utils && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/Whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid"
+                    "value": "sh && sudo apt-get update && sudo apt-get install -y apache2-utils && sudo apt-get install -y squid && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/Whitelist.txt -O /etc/squid/whitelist.txt && sudo wget https://raw.githubusercontent.com/gderossilive/CoreInfra/master/Files/squid.conf -O /etc/squid/squid.conf && sudo systemctl restart squid"
                   }
                 },
                 "template": {
@@ -3092,7 +3092,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.15.31.15270",
-                      "templateHash": "16762210392557437199"
+                      "templateHash": "6843552380003583251"
                     }
                   },
                   "parameters": {
@@ -3170,7 +3170,7 @@
                       "type": "string"
                     },
                     "Command": {
-                      "type": "string",
+                      "type": "securestring",
                       "defaultValue": ""
                     },
                     "CustomDnsServer": {
@@ -3255,23 +3255,20 @@
                       "condition": "[not(equals(parameters('Command'), ''))]",
                       "type": "Microsoft.Compute/virtualMachines/extensions",
                       "apiVersion": "2022-08-01",
-                      "name": "[format('{0}/{1}', parameters('vmName'), 'CustomScriptExtension')]",
+                      "name": "[format('{0}/CustomScript', parameters('vmName'))]",
                       "location": "[parameters('location')]",
                       "properties": {
                         "publisher": "Microsoft.Azure.Extensions",
                         "type": "CustomScript",
                         "typeHandlerVersion": "2.1",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                          "skipDos2Unix": false,
-                          "timestamp": 123456789
-                        },
+                        "autoUpgradeMinorVersion": false,
+                        "settings": {},
                         "protectedSettings": {
                           "commandToExecute": "[parameters('Command')]"
                         }
                       },
                       "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                        "[resourceId('Microsoft.DevTestLab/schedules', format('shutdown-computevm-{0}', parameters('vmName')))]"
                       ]
                     },
                     {
@@ -3317,7 +3314,7 @@
               "condition": "[parameters('DeployNSG')]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
-              "name": "NoInternetOnPrem",
+              "name": "InternetAccess",
               "resourceGroup": "[parameters('OnPremRGname')]",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -3329,13 +3326,13 @@
                     "value": []
                   },
                   "access": {
-                    "value": "Deny"
+                    "value": "Allow"
                   },
                   "NsgName": {
                     "value": "[variables('networkSecurityGroupName')]"
                   },
                   "RuleName": {
-                    "value": "NoInternet"
+                    "value": "InternetAccess"
                   },
                   "protocol": {
                     "value": "Tcp"
