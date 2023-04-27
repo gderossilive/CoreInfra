@@ -11,3 +11,6 @@ aka.ms
 .visualstudio.com
 .windowsupdate.com
 .agentsvc.azure-automation.net
+.windowsupdate.com
+raw.githubusercontent.com
+.digicert.com
