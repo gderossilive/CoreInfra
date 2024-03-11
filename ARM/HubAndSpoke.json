@@ -1474,7 +1474,7 @@
                         "forwardingRuleState": "Enabled",
                         "targetDnsServers": [
                           {
-                            "ipAddress": "10.10.0.4",
+                            "ipAddress": "10.10.100.4",
                             "port": 53
                           }
                         ]
